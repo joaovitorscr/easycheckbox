@@ -11,19 +11,21 @@ datasource db {
 }
 
 model CheckBoxes {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String   @db.VarChar(255)
   content   String?
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   email String @unique
-  name String
+  username String @unique
   password String
   boxes CheckBoxes[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
