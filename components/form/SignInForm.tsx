@@ -54,7 +54,7 @@ export default function SignInForm() {
         variant: 'destructive',
       })
     } else {
-      router.push('/mylist')
+      router.push('/boxes')
       router.refresh()
     }
   }

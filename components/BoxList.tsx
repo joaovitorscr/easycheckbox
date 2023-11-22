@@ -1,5 +1,9 @@
 import Checkbox from '@/components/Checkbox'
-export default function BoxList() {
+
+interface BoxListProps {
+  data: object
+}
+export default function BoxList({ data }: BoxListProps) {
   return (
     <div>
       <Checkbox checked={true} content="lasanha" />

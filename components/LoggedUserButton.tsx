@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 
 export default function LoggedUserButton() {
   return (
@@ -43,7 +44,7 @@ export default function LoggedUserButton() {
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <MousePointerSquare className="mr-2 w-5 h-5" />
-          My Boxes
+          <Link href="/boxes">My boxes</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
