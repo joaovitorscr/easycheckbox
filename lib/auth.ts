@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         return {
-          id: existingUser.id,
+          id: existingUser.id + '',
           username: existingUser.username,
           email: existingUser.email,
         }
@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
-      session.user.id = token.id
+      session.user.id = token.id as string
       return session
     },
   },

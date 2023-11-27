@@ -43,6 +43,9 @@ export async function GET() {
           equals: session?.user.id,
         },
       },
+      include: {
+        content: true,
+      },
     })
     return NextResponse.json({ boxes })
   } catch (error) {

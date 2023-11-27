@@ -1,17 +1,20 @@
 'use client'
 
+import { BoxProps } from '@/components/Checkbox'
 import Container from '@/components/Container'
+import { BoxListCreation } from '@/components/form/BoxListCreation'
 import axios from 'axios'
 import Link from 'next/link'
 
 import { useEffect, useState } from 'react'
 
-interface BoxesProps {
+export interface BoxesProps {
   id: string
   createdAt: string
   updatedAt: string
   name: string
   authorId: string
+  content: BoxProps[]
 }
 
 export default function Boxes() {
@@ -29,12 +32,13 @@ export default function Boxes() {
 
   return (
     <Container>
+      <BoxListCreation />
       <div className="grid grid-cols-4 bg-zinc-600 rounded-md">
         {boxes.map((box) => (
           <div key={box.id}>
             <div>{box.name}</div>
             <div>Last modified at {box.updatedAt}</div>
-            <Link href={`boxes/${box.id}`}>Acessar lista</Link>
+            <Link href={`box/${box.id}`}>Acessar lista</Link>
           </div>
         ))}
       </div>
