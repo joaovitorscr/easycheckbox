@@ -28,6 +28,7 @@ export default function Boxes() {
     client.get('?_limit=10').then((response) => {
       setBoxes(response.data.boxes)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
