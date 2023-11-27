@@ -64,3 +64,31 @@ export async function PUT(req: Request) {
     )
   }
 }
+
+export async function DELETE(req: Request) {
+  const boxSchema = z.object({
+    id: z.string(),
+  })
+
+  const body = await req.json()
+  const { id } = boxSchema.parse(body)
+
+  const deleteBox = await db.box.delete({
+    where: {
+      id: id,
+    },
+  })
+
+  try {
+    return NextResponse.json(
+      { deleteBox, message: `Box deleted succesfully` },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.log(error)
+    return NextResponse.json(
+      { message: 'Something went wrong!' },
+      { status: 500 }
+    )
+  }
+}

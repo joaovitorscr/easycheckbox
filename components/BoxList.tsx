@@ -11,17 +11,18 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { toast } from './ui/use-toast'
+import { Trash } from 'lucide-react'
 
 interface BoxListProps {
   boxUrl: string
 }
 
-const FormSchema = z.object({
-  content: z.string(),
-})
-
 export default function BoxList({ boxUrl }: BoxListProps) {
   const [boxes, setBoxes] = useState<BoxesProps[]>([])
+
+  const FormSchema = z.object({
+    content: z.string(),
+  })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -39,6 +40,34 @@ export default function BoxList({ boxUrl }: BoxListProps) {
   }, [])
 
   const box = boxes.find((item) => item.id === boxUrl)
+
+  async function deleteItem(id: string) {
+    const response = await fetch('/api/box', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    })
+
+    if (response.ok) {
+      toast({
+        title: 'SUCCESS',
+        description: 'Your box was deleted succesfully!',
+        variant: 'default',
+      })
+    } else {
+      const errorResponse = await response.json()
+      console.error('API Error:', errorResponse)
+      toast({
+        title: 'ERROR',
+        description: 'Whoops! Something went wrong!',
+        variant: 'destructive',
+      })
+    }
+  }
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     const response = await fetch('/api/box', {
@@ -74,14 +103,19 @@ export default function BoxList({ boxUrl }: BoxListProps) {
     <div>
       <h2>{box?.name}</h2>
       {box?.content ? (
-        <div>
+        <div className="flex">
           {box?.content.map((item) => (
-            <Checkbox
-              key={item.id}
-              id={item.id}
-              checked={item.checked}
-              content={item.content}
-            />
+            <>
+              <Checkbox
+                key={item.id}
+                id={item.id}
+                checked={item.checked}
+                content={item.content}
+              />
+              <Button onClick={() => deleteItem(item.id)}>
+                <Trash />
+              </Button>
+            </>
           ))}
         </div>
       ) : (
