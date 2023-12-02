@@ -75,7 +75,7 @@ export async function DELETE(req: Request) {
 
   const deleteBox = await db.box.delete({
     where: {
-      id: id,
+      id,
     },
   })
 
