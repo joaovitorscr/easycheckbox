@@ -55,3 +55,62 @@ export async function GET() {
     )
   }
 }
+
+export async function DELETE(req: Request) {
+  const boxSchema = z.object({
+    id: z.string(),
+  })
+
+  const body = await req.json()
+  const { id } = boxSchema.parse(body)
+
+  const deleteBox = await db.checkBoxList.delete({
+    where: {
+      id,
+    },
+  })
+
+  try {
+    return NextResponse.json(
+      { deleteBox, message: `List deleted succesfully` },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.log(error)
+    return NextResponse.json(
+      { message: 'Something went wrong!' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(req: Request) {
+  const listSchema = z.object({
+    name: z.string(),
+    id: z.string(),
+  })
+
+  try {
+    const body = req.json()
+    const { name, id } = listSchema.parse(body)
+
+    const updatedBox = db.checkBoxList.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+      },
+    })
+
+    return NextResponse.json(
+      { updatedBox, message: 'List succesfully updated' },
+      { status: 200 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Something went wrong!' },
+      { status: 500 }
+    )
+  }
+}
