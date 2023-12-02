@@ -1,9 +1,9 @@
-import BoxList from '@/components/BoxList'
+import BoxPage from './BoxPage'
 
 export default function Box({ params }: { params: { id: string } }) {
   return (
     <div>
-      <BoxList boxUrl={params.id} />
+      <BoxPage boxUrl={params.id} />
     </div>
   )
 }
