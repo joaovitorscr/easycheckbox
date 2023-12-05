@@ -160,24 +160,40 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
         </div>
       </div>
       <div className="space-y-4 mt-40 justify-center">
-        {box?.content.length! > 0 ? (
+        {box?.content ? (
           <div>
-            {box?.content.map((item) => (
-              <div className="flex items-center justify-center" key={item.id}>
-                <Checkbox
-                  id={item.id}
-                  checked={item.checked}
-                  content={item.content}
-                />
-                <Button variant={'ghost'} onClick={() => deleteItem(item.id)}>
-                  <Trash />
-                </Button>
+            {box?.content.length > 0 ? (
+              <div>
+                {box?.content.map((item) => (
+                  <div
+                    className="flex items-center justify-center"
+                    key={item.id}
+                  >
+                    <Checkbox
+                      id={item.id}
+                      checked={item.checked}
+                      content={item.content}
+                    />
+                    <Button
+                      variant={'ghost'}
+                      onClick={() => deleteItem(item.id)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="flex items-center justify-center">
+                <h3 className="text-2xl">Start creating your first box!</h3>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex items-center justify-center">
-            <h3 className="text-2xl">Start creating your first box!</h3>
+            <h3 className="text-2xl">
+              Something went wrong! Try refresing the page
+            </h3>
           </div>
         )}
       </div>
