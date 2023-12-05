@@ -28,7 +28,7 @@ interface BoxPageInterface {
 
 export default function BoxPage({ boxUrl }: BoxPageInterface) {
   const [boxes, setBoxes] = useState<BoxesProps[]>([])
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   const FormSchema = z.object({
     content: z.string(),
@@ -39,21 +39,18 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
   })
 
   async function fetchBoxes() {
-    const response = await fetch('/api/box', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const client = axios.create({
+      baseURL: '/api/checkboxlist',
     })
 
-    if (response.ok) {
-      setBoxes(await response.json())
-    } else {
-      const errorResponse = await response.json()
-      console.error('API Error:', errorResponse)
+    try {
+      client.get('').then((response) => {
+        setBoxes(response.data.boxes)
+      })
+    } catch (error) {
       toast({
         title: 'ERROR',
-        description: 'Whoops! Something went wrong!',
+        description: `You don't have acess to this page`,
         variant: 'destructive',
       })
     }
@@ -125,94 +122,66 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
   }
   const box = boxes.find((item) => item.id === boxUrl)
 
+  if (status === 'loading') {
+    return <p>Loading...</p>
+  }
+
+  if (status === 'unauthenticated') {
+    return <p>Access Denied</p>
+  }
+
+  if (session?.user.id != box?.authorId) {
+    return <p>Access Denied</p>
+  }
+
   return (
     <Container>
-      {box?.authorId === session?.user.id ? (
-        <div>
-          {box != undefined ? (
-            <div>
-              {box.content.length > 0 ? (
-                <>
-                  <div className="mt-10 flex flex-col items-center md:flex-row md:justify-between">
-                    <Form {...form}>
-                      <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="flex"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="content"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  autoComplete="off"
-                                  className="md:p-8 md:w-80 md:text-center"
-                                  placeholder="What you have to do?"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button className="p-2 ml-2 md:hidden" type="submit">
-                          <Plus />
-                        </Button>
-                      </form>
-                    </Form>
-                    <div className="space-y-2 mt-4 md:space-y-0 md:mt-0">
-                      <h2 className="font-medium text-center text-2xl underline underline-offset-4">
-                        {box?.name}
-                      </h2>
-                      <p>{box?.authorId}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4 mt-40 justify-center">
-                    {box?.content.map((item) => (
-                      <div
-                        className="flex items-center justify-center"
-                        key={item.id}
-                      >
-                        <Checkbox
-                          id={item.id}
-                          checked={item.checked}
-                          content={item.content}
-                        />
-                        <Button
-                          variant={'ghost'}
-                          onClick={() => deleteItem(item.id)}
-                        >
-                          <Trash />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="flex justify-center text-2xl">
-                  <h2>Create your first box!</h2>
-                </div>
+      <div className="mt-10 flex flex-col items-center md:flex-row md:justify-between">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      className="md:p-8 md:w-80 md:text-center"
+                      placeholder="What you have to do?"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          ) : (
-            <div className="flex justify-center text-2xl">
-              <h2>Loading...</h2>
-            </div>
-          )}
+            />
+            <Button className="p-2 ml-2 md:hidden" type="submit">
+              <Plus />
+            </Button>
+          </form>
+        </Form>
+        <div className="space-y-2 mt-4 md:space-y-0 md:mt-0">
+          <h2 className="font-medium text-center text-2xl underline underline-offset-4">
+            {box?.name}
+          </h2>
+          <p>{box?.authorId}</p>
         </div>
-      ) : (
-        <div className="flex flex-col justify-center font-medium mt-40 text-2xl space-y-8 items-center">
-          <h2>You don&apos;t have access to this page!</h2>{' '}
-          <p>
-            Please{' '}
-            <Link className="underline hover:text-blue-400" href={'/sign-in'}>
-              Sign In
-            </Link>{' '}
-            to see your boxes.
-          </p>
-        </div>
-      )}
+      </div>
+      <div className="space-y-4 mt-40 justify-center">
+        {box?.content.map((item) => (
+          <div className="flex items-center justify-center" key={item.id}>
+            <Checkbox
+              id={item.id}
+              checked={item.checked}
+              content={item.content}
+            />
+            <Button variant={'ghost'} onClick={() => deleteItem(item.id)}>
+              <Trash />
+            </Button>
+          </div>
+        ))}
+      </div>
     </Container>
   )
 }
