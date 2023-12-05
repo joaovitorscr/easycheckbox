@@ -8,7 +8,7 @@ interface AuthLayoutProps {
 const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
   return (
     <Container>
-      <div className="mt-20 flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center align-middle h-[calc(100vh-74px)]">
         {children}
       </div>
     </Container>

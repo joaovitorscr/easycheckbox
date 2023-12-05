@@ -19,8 +19,9 @@ import * as z from 'zod'
 import { toast } from '../../../components/ui/use-toast'
 import { Plus, Trash } from 'lucide-react'
 import Container from '@/components/Container'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
+import Loading from './loading'
 
 interface BoxPageInterface {
   boxUrl: string
@@ -28,7 +29,7 @@ interface BoxPageInterface {
 
 export default function BoxPage({ boxUrl }: BoxPageInterface) {
   const [boxes, setBoxes] = useState<BoxesProps[]>([])
-  const { data: session, status } = useSession()
+  const { status } = useSession()
 
   const FormSchema = z.object({
     content: z.string(),
@@ -123,15 +124,7 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
   const box = boxes.find((item) => item.id === boxUrl)
 
   if (status === 'loading') {
-    return <p>Loading...</p>
-  }
-
-  if (status === 'unauthenticated') {
-    return <p>Access Denied</p>
-  }
-
-  if (session?.user.id != box?.authorId) {
-    return <p>Access Denied</p>
+    return <Loading />
   }
 
   return (
@@ -165,7 +158,6 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
           <h2 className="font-medium text-center text-2xl underline underline-offset-4">
             {box?.name}
           </h2>
-          <p>{box?.authorId}</p>
         </div>
       </div>
       <div className="space-y-4 mt-40 justify-center">

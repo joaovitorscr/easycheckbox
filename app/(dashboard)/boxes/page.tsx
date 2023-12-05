@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
+import Loading from './loading'
+import { formatDate } from '@/lib/utils'
 
 const FormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -27,15 +29,15 @@ const FormSchema = z.object({
 
 export interface BoxesProps {
   id: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
   name: string
   authorId: string
   content: BoxInterface[]
 }
 
 export default function Boxes() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -111,6 +113,10 @@ export default function Boxes() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (status === 'loading') {
+    return <Loading />
+  }
+
   return (
     <Container>
       <div className="mt-10 flex justify-center">
@@ -125,7 +131,7 @@ export default function Boxes() {
                     <Input
                       autoComplete="off"
                       className="md:p-8 md:w-80 md:text-center"
-                      placeholder="The name of your list"
+                      placeholder="The name of your list and ENTER..."
                       {...field}
                     />
                   </FormControl>
@@ -153,7 +159,7 @@ export default function Boxes() {
               <div className="bg-zinc-800 rounded-md p-4">
                 <div className="flex flex-col space-y-8">
                   <div>{box.name}</div>
-                  <div>Created at {box.createdAt}</div>
+                  <div>Created at {formatDate(box.createdAt)}</div>
                 </div>
               </div>
             </Link>
