@@ -19,6 +19,8 @@ import * as z from 'zod'
 import { toast } from '../../../components/ui/use-toast'
 import { Plus, Trash } from 'lucide-react'
 import Container from '@/components/Container'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 interface BoxPageInterface {
   boxUrl: string
@@ -26,6 +28,7 @@ interface BoxPageInterface {
 
 export default function BoxPage({ boxUrl }: BoxPageInterface) {
   const [boxes, setBoxes] = useState<BoxesProps[]>([])
+  const { data: session } = useSession()
 
   const FormSchema = z.object({
     content: z.string(),
@@ -35,14 +38,25 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
     resolver: zodResolver(FormSchema),
   })
 
-  function fetchBoxes() {
-    const client = axios.create({
-      baseURL: '/api/checkboxlist',
+  async function fetchBoxes() {
+    const response = await fetch('/api/box', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
 
-    client.get('').then((response) => {
-      setBoxes(response.data.boxes)
-    })
+    if (response.ok) {
+      setBoxes(await response.json())
+    } else {
+      const errorResponse = await response.json()
+      console.error('API Error:', errorResponse)
+      toast({
+        title: 'ERROR',
+        description: 'Whoops! Something went wrong!',
+        variant: 'destructive',
+      })
+    }
   }
 
   useEffect(() => {
@@ -113,54 +127,92 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
 
   return (
     <Container>
-      <div className="mt-10 flex justify-between items-center">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="What you have to do?" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+      {box?.authorId === session?.user.id ? (
+        <div>
+          {box != undefined ? (
+            <div>
+              {box.content.length > 0 ? (
+                <>
+                  <div className="mt-10 flex flex-col items-center md:flex-row md:justify-between">
+                    <Form {...form}>
+                      <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="content"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  autoComplete="off"
+                                  className="md:p-8 md:w-80 md:text-center"
+                                  placeholder="What you have to do?"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button className="p-2 ml-2 md:hidden" type="submit">
+                          <Plus />
+                        </Button>
+                      </form>
+                    </Form>
+                    <div className="space-y-2 mt-4 md:space-y-0 md:mt-0">
+                      <h2 className="font-medium text-center text-2xl underline underline-offset-4">
+                        {box?.name}
+                      </h2>
+                      <p>{box?.authorId}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 mt-40 justify-center">
+                    {box?.content.map((item) => (
+                      <div
+                        className="flex items-center justify-center"
+                        key={item.id}
+                      >
+                        <Checkbox
+                          id={item.id}
+                          checked={item.checked}
+                          content={item.content}
+                        />
+                        <Button
+                          variant={'ghost'}
+                          onClick={() => deleteItem(item.id)}
+                        >
+                          <Trash />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-center text-2xl">
+                  <h2>Create your first box!</h2>
+                </div>
               )}
-            />
-            <Button className="p-2 ml-2" type="submit">
-              <Plus />
-            </Button>
-          </form>
-        </Form>
-        <h2 className="font-medium text-2xl underline underline-offset-4">
-          {box?.name}
-        </h2>
-      </div>
-      <div className="mt-20 flex justify-center">
-        {box ? (
-          <div className="flex flex-col w-full">
-            {box?.content.map((item) => (
-              <div className="flex items-center" key={item.id}>
-                <Checkbox
-                  id={item.id}
-                  checked={item.checked}
-                  content={item.content}
-                />
-                <Button onClick={() => deleteItem(item.id)}>
-                  <Trash />
-                </Button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-center">
-              <h2>Create your first box!</h2>
             </div>
-          </>
-        )}
-      </div>
+          ) : (
+            <div className="flex justify-center text-2xl">
+              <h2>Loading...</h2>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col justify-center font-medium mt-40 text-2xl space-y-8 items-center">
+          <h2>You don&apos;t have access to this page!</h2>{' '}
+          <p>
+            Please{' '}
+            <Link className="underline hover:text-blue-400" href={'/sign-in'}>
+              Sign In
+            </Link>{' '}
+            to see your boxes.
+          </p>
+        </div>
+      )}
     </Container>
   )
 }

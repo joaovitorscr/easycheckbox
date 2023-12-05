@@ -1,6 +1,6 @@
 'use client'
 
-import { BoxProps } from '@/app/box/[id]/Checkbox'
+import { BoxInterface } from '@/app/box/[id]/Checkbox'
 import Container from '@/components/Container'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
@@ -31,7 +31,7 @@ export interface BoxesProps {
   updatedAt?: string
   name: string
   authorId: string
-  content: BoxProps[]
+  content: BoxInterface[]
 }
 
 export default function Boxes() {
@@ -113,7 +113,7 @@ export default function Boxes() {
 
   return (
     <Container>
-      <div className="mt-10">
+      <div className="mt-10 flex justify-center">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
             <FormField
@@ -122,19 +122,24 @@ export default function Boxes() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="The name of your list" {...field} />
+                    <Input
+                      autoComplete="off"
+                      className="md:p-8 md:w-80 md:text-center"
+                      placeholder="The name of your list"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="p-2 ml-2" type="submit">
+            <Button className="p-2 ml-2 md:hidden" type="submit">
               <Plus />
             </Button>
           </form>
         </Form>
       </div>
-      <div className="grid grid-cols-4 gap-4 mt-20">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-20">
         {boxes.map((box) => (
           <div key={box.id} className="relative">
             <Button

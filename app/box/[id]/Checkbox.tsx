@@ -1,8 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { toast } from '../../../components/ui/use-toast'
-import { cn } from '@/lib/utils'
 
-export interface BoxProps {
+export interface BoxInterface {
   id: string
   content: string
   checked: boolean
@@ -34,14 +33,14 @@ async function handleUpdate(id: string, checked: boolean, content: string) {
   }
 }
 
-export default function Checkbox({ checked, content, id }: BoxProps) {
+export default function Checkbox({ checked, content, id }: BoxInterface) {
   let temporaryValue = content
   let temporaryChecked = checked
 
   return (
-    <div className="flex w-full mr-4 items-center">
+    <div className="flex mr-4 items-center md:w-[50%]">
       <Input
-        className="mr-2 w-10 cursor-pointer"
+        className="mr-4 w-10 cursor-pointer"
         type="checkbox"
         defaultChecked={checked}
         onChange={(e) => (temporaryChecked = e.target.checked)}
@@ -50,9 +49,9 @@ export default function Checkbox({ checked, content, id }: BoxProps) {
       <Input
         type="text"
         defaultValue={temporaryValue}
-        className={cn(
-          'border-none dark:bg-transparent dark:border-none dark:outline-1 text-lg'
-        )}
+        className={
+          'border-none dark:bg-transparent dark:border-none dark:outline-1 text-lg outline-1'
+        }
         onChange={(e) => (temporaryValue = e.target.value)}
         onBlur={() => handleUpdate(id, temporaryChecked, temporaryValue)}
       />
