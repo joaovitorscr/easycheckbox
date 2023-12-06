@@ -9,32 +9,23 @@ export default async function Home() {
   return (
     <div className="flex relative h-[calc(100vh-74px)]">
       <Container>
-        <section className="my-auto absolute left-96 right-96 top-72 z-10">
+        <section className="my-auto absolute top-40 right-0 md:left-96 md:right-96 md:top-72 z-10">
           <div className="flex flex-col items-center space-y-16">
-            <h1 className="text-8xl font-bold">EasyCheckBox</h1>
-            <p className="text-2xl text-center font-medium">
+            <h1 className="text-3xl md:text-8xl font-bold">EasyCheckBox</h1>
+            <p className="text-md md:text-3xl md:w-96 text-center font-medium">
               Enough of complicating things, just sign in and start checking
               toshe boxes!
             </p>
-            {session?.user ? (
-              <Link
-                className={`${buttonVariants({
-                  variant: 'outline',
-                })}, p-8 w-40 rounded-lg`}
-                href={'/boxes'}
-              >
-                See your boxes
-              </Link>
-            ) : (
-              <Link
-                className={`${buttonVariants({
-                  variant: 'outline',
-                })}, p-8 w-40 rounded-lg`}
-                href={'/sign-in'}
-              >
-                <span className="font-medium text-lg">Sign In</span>
-              </Link>
-            )}
+            <Link
+              className={`${buttonVariants({
+                variant: 'outline',
+              })}, p-8 w-40 rounded-lg md:w-48`}
+              href={session?.user ? '/boxes' : '/sign-in'}
+            >
+              <span className="font-medium text-lg md:text-xl">
+                {session?.user ? 'See your boxes' : 'Sign In'}
+              </span>
+            </Link>
           </div>
         </section>
       </Container>

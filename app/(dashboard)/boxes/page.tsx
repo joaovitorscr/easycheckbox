@@ -131,7 +131,7 @@ export default function Boxes() {
                     <Input
                       autoComplete="off"
                       className="md:p-8 md:w-80 md:text-center"
-                      placeholder="The name of your list and ENTER..."
+                      placeholder="The name of your list"
                       {...field}
                     />
                   </FormControl>
