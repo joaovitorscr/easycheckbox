@@ -21,6 +21,7 @@ import { Plus, Trash } from 'lucide-react'
 import Container from '@/components/Container'
 import { useSession } from 'next-auth/react'
 import Loading from './loading'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface BoxPageInterface {
   boxUrl: string
@@ -103,6 +104,8 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
       }),
     })
 
+    form.reset({ content: '' })
+
     if (response.ok) {
       fetchBoxes()
       toast({
@@ -159,30 +162,38 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
           </h2>
         </div>
       </div>
-      <div className="space-y-4 mt-40 justify-center">
+      <div className="mt-10 flex justify-center">
         {box?.content ? (
           <div>
             {box?.content.length > 0 ? (
-              <div>
-                {box?.content.map((item) => (
-                  <div
-                    className="flex items-center justify-center"
-                    key={item.id}
-                  >
-                    <Checkbox
-                      id={item.id}
-                      checked={item.checked}
-                      content={item.content}
-                    />
-                    <Button
-                      variant={'ghost'}
-                      onClick={() => deleteItem(item.id)}
-                    >
-                      <Trash />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+              <ScrollArea className="md:w-[1080px] md:h-[580px]">
+                <div className="space-y-4">
+                  {box?.content
+                    .sort((a, b) => {
+                      return Date.parse(a.createdAt) - Date.parse(b.createdAt)
+                    })
+                    .map((item) => (
+                      <div
+                        className="flex items-center justify-center"
+                        key={item.id}
+                      >
+                        <Checkbox
+                          id={item.id}
+                          checked={item.checked}
+                          content={item.content}
+                          createdAt={item.createdAt}
+                          updatedAt={item.updatedAt}
+                        />
+                        <Button
+                          variant={'ghost'}
+                          onClick={() => deleteItem(item.id)}
+                        >
+                          <Trash />
+                        </Button>
+                      </div>
+                    ))}
+                </div>
+              </ScrollArea>
             ) : (
               <div className="flex items-center justify-center">
                 <h3 className="text-2xl">Start creating your first box!</h3>

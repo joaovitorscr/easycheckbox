@@ -5,6 +5,8 @@ export interface BoxInterface {
   id: string
   content: string
   checked: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 async function handleUpdate(id: string, checked: boolean, content: string) {
