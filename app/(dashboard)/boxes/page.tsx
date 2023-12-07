@@ -126,7 +126,7 @@ export default function Boxes() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
+                <FormItem id="listName">
                   <FormControl>
                     <Input
                       autoComplete="off"

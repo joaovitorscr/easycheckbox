@@ -66,7 +66,7 @@ export default function SignIn() {
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem>
+              <FormItem id="username">
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter your username" {...field} />
@@ -79,7 +79,7 @@ export default function SignIn() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem id="password">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
@@ -92,7 +92,7 @@ export default function SignIn() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button id="#submit" type="submit" className="w-full">
             Submit
           </Button>
         </form>

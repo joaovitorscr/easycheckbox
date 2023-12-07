@@ -40,7 +40,7 @@ export default function LoggedUserButton() {
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer">
           <UserCog className="mr-2 w-5 h-5" />
-          Edit profile
+          <Link href="/settings">Edit profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <MousePointerSquare className="mr-2 w-5 h-5" />

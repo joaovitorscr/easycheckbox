@@ -138,7 +138,7 @@ export default function BoxPage({ boxUrl }: BoxPageInterface) {
               control={form.control}
               name="content"
               render={({ field }) => (
-                <FormItem>
+                <FormItem id="contentForm">
                   <FormControl>
                     <Input
                       autoComplete="off"
