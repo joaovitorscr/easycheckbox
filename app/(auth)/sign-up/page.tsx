@@ -69,7 +69,7 @@ export default function SignUp() {
     } else {
       toast({
         title: 'ERROR',
-        description: 'Whoops! Something went wrong!',
+        description: 'Username or password are incorret or already in use!',
         variant: 'destructive',
       })
     }
