@@ -4,6 +4,13 @@ Who never had a lot of thing to do in a day and couldn't figure it out what to d
 
 ## Live version on [Vercel](https://easycheckbox.vercel.app/)
 
+## 🧱 Stack
+* Next.js
+* TailwindCSS
+* Prisma
+* PostgreSQL
+* shadcn/ui
+
 ## ⚠️ Prerequesites
 npm >=10.1.0
 node >=18.171
