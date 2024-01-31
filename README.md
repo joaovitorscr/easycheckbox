@@ -29,8 +29,6 @@ npm install
 yarn install
 # or
 pnpm install
-# or
-bun install
 ```
 
 ### 3. Create a .env file in the root of the project and the define the necessary variables, that you can see at .env.sample file.
@@ -51,8 +49,6 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
